@@ -36,7 +36,9 @@ function Reveal({ children, className = "" }: { children: ReactNode; className?:
   const [el, setEl] = useState<HTMLDivElement | null>(null);
   useEffect(() => {
     if (!el) return;
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && (el.classList.add("is-visible"), io.disconnect()), { threshold: 0.15 });
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { el.classList.add("is-visible"); io.disconnect(); }
+    }, { threshold: 0.15 });
     io.observe(el);
     return () => io.disconnect();
   }, [el]);
